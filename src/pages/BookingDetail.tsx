@@ -32,7 +32,7 @@ export default function BookingDetail() {
 
   const { data: booking, isLoading } = useQuery({
     queryKey: ['booking', id],
-    queryFn: async () => {
+    queryFn: async (): Promise<any> => {
       const { data, error } = await supabase
         .from('bookings')
         .select(`
