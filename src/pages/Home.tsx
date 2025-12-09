@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell } from 'lucide-react';
+import { Search, Bell, MapPin } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { CategoryGrid } from '@/components/home/CategoryGrid';
@@ -22,103 +22,113 @@ export default function Home() {
     .join('')
     .toUpperCase() || '?';
 
-  const firstName = profile?.full_name?.split(' ')[0] || 'there';
-
-  // Get time-based greeting
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
-
-  const header = (
-    <div className="px-5 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <Avatar 
-          className="w-12 h-12 cursor-pointer ring-2 ring-background shadow-soft transition-transform duration-200 hover:scale-105 active:scale-95" 
-          onClick={() => navigate('/profile')}
-        >
-          <AvatarImage src={profile?.avatar_url || undefined} />
-          <AvatarFallback className="bg-foreground text-background font-semibold text-sm">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
-        <div className="animate-fade-in">
-          <p className="text-sm text-muted-foreground font-medium">{getGreeting()}</p>
-          <p className="text-heading-sm text-foreground">{firstName}</p>
-        </div>
-      </div>
-      <button 
-        className="icon-btn w-11 h-11"
-        onClick={() => navigate('/notifications')}
-      >
-        <Bell className="w-5 h-5 text-foreground" strokeWidth={1.75} />
-      </button>
-    </div>
-  );
+  const firstName = profile?.full_name?.split(' ')[0] || 'Muhammad';
 
   return (
-    <MobileLayout header={header} footer={<BottomNav />}>
-      <div className="px-5 animate-fade-in" style={{ animationDelay: '100ms' }}>
-        {/* Search Bar */}
-        <button
-          onClick={() => navigate('/search')}
-          className="w-full flex items-center gap-4 h-14 px-5 bg-secondary rounded-2xl mb-8 transition-all duration-200 hover:bg-muted active:scale-[0.98]"
-        >
-          <Search className="w-5 h-5 text-muted-foreground" strokeWidth={1.75} />
-          <span className="text-muted-foreground font-medium">What service do you need?</span>
-        </button>
-
-        {/* Categories */}
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-heading">Categories</h2>
+    <MobileLayout footer={<BottomNav />} noPadding>
+      <div className="relative min-h-screen">
+        {/* Gradient Header Background */}
+        <div className="absolute inset-x-0 top-0 h-72 bg-gradient-header -z-10" />
+        
+        <div className="px-5 safe-top">
+          {/* Top Bar */}
+          <div className="flex items-center justify-between py-4 animate-fade-up">
+            <div className="flex items-center gap-3">
+              <Avatar 
+                className="w-12 h-12 cursor-pointer ring-2 ring-background shadow-md" 
+                onClick={() => navigate('/profile')}
+              >
+                <AvatarImage src={profile?.avatar_url || undefined} />
+                <AvatarFallback className="bg-gradient-accent text-white font-semibold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-lg font-bold text-foreground">100.00 $</p>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  Top up credit
+                </p>
+              </div>
+            </div>
             <button 
-              onClick={() => navigate('/search')}
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+              className="w-12 h-12 rounded-full bg-card shadow-md flex items-center justify-center touch-scale"
+              onClick={() => navigate('/notifications')}
             >
-              See all
+              <Bell className="w-5 h-5 text-foreground" strokeWidth={1.75} />
             </button>
           </div>
-          <CategoryGrid categories={categories} loading={categoriesLoading} />
-        </section>
 
-        {/* Top Providers */}
-        <section className="pb-6">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-heading">Top Rated</h2>
-            <button 
-              onClick={() => navigate('/search')}
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
-              See all
+          {/* Greeting */}
+          <div className="mt-4 animate-fade-up stagger-1">
+            <h1 className="text-heading text-foreground">
+              Hello {firstName},
+            </h1>
+            <p className="text-2xl font-medium text-primary mt-1">
+              Where to go?
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <button
+            onClick={() => navigate('/search')}
+            className="w-full mt-6 animate-fade-up stagger-2"
+          >
+            <div className="relative flex items-center bg-card shadow-md rounded-2xl px-5 py-4">
+              <Search className="w-5 h-5 text-muted-foreground mr-4" strokeWidth={1.75} />
+              <span className="text-muted-foreground font-medium flex-1 text-left">Enter destination</span>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+                <MapPin className="w-4 h-4 text-primary" strokeWidth={2} />
+              </div>
+            </div>
+          </button>
+
+          {/* Categories */}
+          <div className="mt-8 animate-fade-up stagger-3">
+            <CategoryGrid categories={categories} loading={categoriesLoading} />
+          </div>
+
+          {/* Location Cards */}
+          <div className="mt-8 animate-fade-up stagger-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="card-elevated p-4">
+                <p className="text-xs text-muted-foreground mb-1">From</p>
+                <p className="font-bold text-lg">PITX</p>
+                <p className="text-xs text-muted-foreground">Parañaque City</p>
+              </div>
+              <div className="card-elevated p-4">
+                <p className="text-xs text-muted-foreground mb-1">To</p>
+                <p className="font-bold text-lg">Cubao</p>
+                <p className="text-xs text-muted-foreground">Quezon City</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="card-elevated p-4">
+                <p className="text-xs text-muted-foreground mb-1">Departing on</p>
+                <p className="font-semibold">Select Date</p>
+              </div>
+              <div className="card-elevated p-4">
+                <p className="text-xs text-muted-foreground mb-1">Passengers</p>
+                <p className="font-semibold">1 Passenger</p>
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <button className="w-full mt-6 bg-foreground text-background py-4 rounded-2xl font-semibold text-base touch-scale">
+              Search
             </button>
           </div>
-          
-          {providersLoading ? (
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-24 skeleton" style={{ animationDelay: `${i * 100}ms` }} />
-              ))}
+
+          {/* Promo Card */}
+          <div className="mt-8 mb-8 animate-fade-up stagger-5">
+            <div className="bg-gradient-to-br from-purple-200/80 to-blue-200/80 rounded-3xl p-5 relative overflow-hidden">
+              <div className="absolute right-4 top-4 w-20 h-20 bg-white/30 rounded-2xl" />
+              <h3 className="text-lg font-semibold text-foreground relative z-10">Ready for</h3>
+              <p className="text-xl font-bold text-foreground relative z-10">Great Service?</p>
             </div>
-          ) : providers.length > 0 ? (
-            <div className="space-y-3 stagger-children">
-              {providers.map((provider) => (
-                <ProviderCard 
-                  key={provider.id} 
-                  provider={provider}
-                  compact
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground font-medium">No providers available yet.</p>
-              <p className="text-sm text-muted-foreground mt-1">Check back soon!</p>
-            </div>
-          )}
-        </section>
+          </div>
+        </div>
       </div>
     </MobileLayout>
   );
