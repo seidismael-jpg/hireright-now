@@ -24,92 +24,102 @@ export default function Home() {
 
   const firstName = profile?.full_name?.split(' ')[0] || 'there';
 
+  // Get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+
   const header = (
-    <div className="px-4 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <div className="px-5 py-4 flex items-center justify-between">
+      <div className="flex items-center gap-4">
         <Avatar 
-          className="w-10 h-10 cursor-pointer" 
+          className="w-12 h-12 cursor-pointer ring-2 ring-background shadow-soft transition-transform duration-200 hover:scale-105 active:scale-95" 
           onClick={() => navigate('/profile')}
         >
           <AvatarImage src={profile?.avatar_url || undefined} />
-          <AvatarFallback className="bg-secondary text-secondary-foreground font-semibold text-sm">
+          <AvatarFallback className="bg-foreground text-background font-semibold text-sm">
             {initials}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <p className="text-sm text-muted-foreground">Good morning</p>
-          <p className="font-semibold text-foreground">{firstName}</p>
+        <div className="animate-fade-in">
+          <p className="text-sm text-muted-foreground font-medium">{getGreeting()}</p>
+          <p className="text-heading-sm text-foreground">{firstName}</p>
         </div>
       </div>
       <button 
-        className="touch-button rounded-full hover:bg-accent transition-colors"
+        className="icon-btn w-11 h-11"
         onClick={() => navigate('/notifications')}
       >
-        <Bell className="w-5 h-5 text-foreground" />
+        <Bell className="w-5 h-5 text-foreground" strokeWidth={1.75} />
       </button>
     </div>
   );
 
   return (
     <MobileLayout header={header} footer={<BottomNav />}>
-      {/* Search Bar */}
-      <button
-        onClick={() => navigate('/search')}
-        className="w-full flex items-center gap-3 h-12 px-4 bg-secondary rounded-xl mb-6"
-      >
-        <Search className="w-5 h-5 text-muted-foreground" />
-        <span className="text-muted-foreground">What service do you need?</span>
-      </button>
+      <div className="px-5 animate-fade-in" style={{ animationDelay: '100ms' }}>
+        {/* Search Bar */}
+        <button
+          onClick={() => navigate('/search')}
+          className="w-full flex items-center gap-4 h-14 px-5 bg-secondary rounded-2xl mb-8 transition-all duration-200 hover:bg-muted active:scale-[0.98]"
+        >
+          <Search className="w-5 h-5 text-muted-foreground" strokeWidth={1.75} />
+          <span className="text-muted-foreground font-medium">What service do you need?</span>
+        </button>
 
-      {/* Categories */}
-      <section className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Categories</h2>
-          <button 
-            onClick={() => navigate('/search')}
-            className="text-sm text-primary font-medium"
-          >
-            See all
-          </button>
-        </div>
-        <CategoryGrid categories={categories} loading={categoriesLoading} />
-      </section>
+        {/* Categories */}
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-heading">Categories</h2>
+            <button 
+              onClick={() => navigate('/search')}
+              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              See all
+            </button>
+          </div>
+          <CategoryGrid categories={categories} loading={categoriesLoading} />
+        </section>
 
-      {/* Top Providers */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Top Rated Providers</h2>
-          <button 
-            onClick={() => navigate('/search')}
-            className="text-sm text-primary font-medium"
-          >
-            See all
-          </button>
-        </div>
-        
-        {providersLoading ? (
-          <div className="space-y-3">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-24 skeleton-pulse rounded-2xl" />
-            ))}
+        {/* Top Providers */}
+        <section className="pb-6">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-heading">Top Rated</h2>
+            <button 
+              onClick={() => navigate('/search')}
+              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              See all
+            </button>
           </div>
-        ) : providers.length > 0 ? (
-          <div className="space-y-3">
-            {providers.map((provider) => (
-              <ProviderCard 
-                key={provider.id} 
-                provider={provider}
-                compact
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <p>No providers available yet.</p>
-            <p className="text-sm mt-1">Check back soon!</p>
-          </div>
-        )}
-      </section>
+          
+          {providersLoading ? (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-24 skeleton" style={{ animationDelay: `${i * 100}ms` }} />
+              ))}
+            </div>
+          ) : providers.length > 0 ? (
+            <div className="space-y-3 stagger-children">
+              {providers.map((provider) => (
+                <ProviderCard 
+                  key={provider.id} 
+                  provider={provider}
+                  compact
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground font-medium">No providers available yet.</p>
+              <p className="text-sm text-muted-foreground mt-1">Check back soon!</p>
+            </div>
+          )}
+        </section>
+      </div>
     </MobileLayout>
   );
 }

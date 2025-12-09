@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Star, MapPin, Clock } from 'lucide-react';
 import { ProviderProfile, Profile } from '@/types/database';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface ProviderCardProps {
@@ -31,16 +30,19 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
       onClick={() => navigate(`/provider/${provider.id}`)}
       className={cn(
         "card-pressed w-full text-left p-4",
-        compact ? "flex items-center gap-3" : "space-y-3"
+        compact ? "flex items-center gap-4" : "space-y-4"
       )}
     >
       <div className={cn(
-        "flex items-start gap-3",
+        "flex items-start gap-4",
         !compact && "w-full"
       )}>
-        <Avatar className={cn(compact ? "w-12 h-12" : "w-14 h-14")}>
+        <Avatar className={cn(
+          "ring-2 ring-background shadow-soft",
+          compact ? "w-14 h-14" : "w-16 h-16"
+        )}>
           <AvatarImage src={profile?.avatar_url || undefined} />
-          <AvatarFallback className="bg-secondary text-secondary-foreground font-semibold">
+          <AvatarFallback className="bg-foreground text-background font-semibold">
             {initials}
           </AvatarFallback>
         </Avatar>
@@ -51,21 +53,21 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
               {profile?.full_name || 'Service Provider'}
             </h3>
             {provider.is_available && (
-              <span className="w-2 h-2 rounded-full bg-success flex-shrink-0" />
+              <span className="status-dot-success animate-pulse-subtle" />
             )}
           </div>
           
           {categoryName && (
-            <p className="text-sm text-muted-foreground truncate">
+            <p className="text-sm text-muted-foreground truncate mt-0.5">
               {categoryName}
             </p>
           )}
           
-          <div className="flex items-center gap-3 mt-1">
+          <div className="flex items-center gap-3 mt-2">
             {provider.avg_rating > 0 && (
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-warning text-warning" />
-                <span className="text-sm font-medium">{provider.avg_rating.toFixed(1)}</span>
+                <span className="text-sm font-semibold">{provider.avg_rating.toFixed(1)}</span>
                 <span className="text-sm text-muted-foreground">
                   ({provider.total_reviews})
                 </span>
@@ -74,7 +76,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
             
             {profile?.location && (
               <div className="flex items-center gap-1 text-muted-foreground">
-                <MapPin className="w-3 h-3" />
+                <MapPin className="w-3.5 h-3.5" strokeWidth={2} />
                 <span className="text-sm truncate">{profile.location}</span>
               </div>
             )}
@@ -83,26 +85,26 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
         
         {provider.hourly_rate && (
           <div className="text-right flex-shrink-0">
-            <p className="font-semibold text-foreground">
+            <p className="text-xl font-bold text-foreground">
               ${provider.hourly_rate}
             </p>
-            <p className="text-xs text-muted-foreground">/hour</p>
+            <p className="text-xs text-muted-foreground font-medium">/hour</p>
           </div>
         )}
       </div>
       
       {!compact && provider.bio && (
-        <p className="text-sm text-muted-foreground line-clamp-2">
+        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {provider.bio}
         </p>
       )}
       
       {!compact && provider.experience_years > 0 && (
         <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="text-xs">
-            <Clock className="w-3 h-3 mr-1" />
-            {provider.experience_years}+ years exp.
-          </Badge>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-xs font-semibold">
+            <Clock className="w-3.5 h-3.5" strokeWidth={2} />
+            {provider.experience_years}+ years
+          </div>
         </div>
       )}
     </button>
