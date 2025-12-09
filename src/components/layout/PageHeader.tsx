@@ -42,7 +42,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         {showBack && (
           <button
             onClick={handleBack}
-            className="icon-btn w-11 h-11"
+            className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center touch-scale"
           >
             <ArrowLeft className="w-5 h-5" strokeWidth={1.75} />
           </button>
@@ -50,7 +50,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       </div>
       
       {title && (
-        <h1 className="text-heading text-foreground">
+        <h1 className="text-lg font-semibold text-foreground">
           {title}
         </h1>
       )}

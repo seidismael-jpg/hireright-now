@@ -19,7 +19,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto relative">
       {header && (
-        <header className="sticky top-0 z-50 glass border-b border-divider/50 safe-top">
+        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border/50 safe-top">
           {header}
         </header>
       )}
@@ -28,7 +28,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
         className={cn(
           "flex-1 overflow-y-auto",
           !noPadding && "py-5",
-          footer && "pb-28",
+          footer && "pb-24",
           className
         )}
       >

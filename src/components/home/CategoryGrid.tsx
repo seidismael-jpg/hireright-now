@@ -1,31 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ServiceCategory } from '@/types/database';
 import { 
-  Zap, Droplets, Sparkles, Hammer, Palette, Truck, 
-  Trees, Wind, GraduationCap, Camera, Car, Dumbbell,
-  Dog, Monitor, Scissors, ChefHat, LucideIcon
+  Car, Truck, Bus, Bike, LucideIcon,
+  Zap, Droplets, Sparkles, Hammer, Palette,
+  Trees, Wind, GraduationCap, Camera, Dumbbell,
+  Dog, Monitor, Scissors, ChefHat
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const iconMap: Record<string, LucideIcon> = {
-  Zap,
-  Droplets,
-  Sparkles,
-  Hammer,
-  Palette,
-  Truck,
-  Trees,
-  Wind,
-  GraduationCap,
-  Camera,
-  Car,
-  Dumbbell,
-  Dog,
-  Monitor,
-  Scissors,
-  ChefHat,
+  Car, Truck, Bus, Bike, Zap, Droplets, Sparkles, Hammer, Palette,
+  Trees, Wind, GraduationCap, Camera, Dumbbell, Dog, Monitor, Scissors, ChefHat,
 };
+
+// Default categories matching the mockup
+const defaultCategories = [
+  { id: 'car', name: 'Car', icon: 'Car' },
+  { id: 'taxi', name: 'Taxi', icon: 'Truck' },
+  { id: 'bus', name: 'Bus', icon: 'Bus' },
+  { id: 'bike', name: 'Bike', icon: 'Bike' },
+];
 
 interface CategoryGridProps {
   categories: ServiceCategory[];
@@ -34,41 +29,52 @@ interface CategoryGridProps {
 
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, loading }) => {
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   if (loading) {
     return (
-      <div className="grid grid-cols-4 gap-4">
-        {[...Array(8)].map((_, i) => (
+      <div className="flex gap-3">
+        {[...Array(4)].map((_, i) => (
           <div key={i} className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-2xl skeleton" style={{ animationDelay: `${i * 50}ms` }} />
-            <div className="w-12 h-3 mt-3 rounded-full skeleton" />
+            <div className="w-16 h-16 rounded-2xl skeleton" />
+            <div className="w-10 h-3 mt-2 rounded-full skeleton" />
           </div>
         ))}
       </div>
     );
   }
 
+  const displayCategories = categories.length > 0 
+    ? categories.slice(0, 4) 
+    : defaultCategories;
+
   return (
-    <div className="grid grid-cols-4 gap-4">
-      {categories.slice(0, 8).map((category, index) => {
-        const Icon = iconMap[category.icon] || Zap;
+    <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+      {displayCategories.map((category, index) => {
+        const Icon = iconMap[category.icon] || Car;
+        const isActive = index === activeIndex;
         
         return (
           <button
             key={category.id}
-            onClick={() => navigate(`/search?category=${category.id}`)}
-            className="flex flex-col items-center group animate-fade-in"
-            style={{ animationDelay: `${index * 50}ms` }}
+            onClick={() => {
+              setActiveIndex(index);
+              navigate(`/search?category=${category.id}`);
+            }}
+            className="flex flex-col items-center touch-scale"
           >
             <div className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center",
-              "bg-secondary transition-all duration-300 ease-smooth",
-              "group-hover:bg-foreground group-hover:text-background",
-              "group-active:scale-90"
+              "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200",
+              isActive 
+                ? "bg-primary text-primary-foreground shadow-lg" 
+                : "bg-secondary text-foreground"
             )}>
               <Icon className="w-6 h-6" strokeWidth={1.75} />
             </div>
-            <span className="text-xs font-semibold mt-3 text-center line-clamp-1 text-foreground/80 group-hover:text-foreground transition-colors">
+            <span className={cn(
+              "text-xs font-medium mt-2 transition-colors",
+              isActive ? "text-foreground" : "text-muted-foreground"
+            )}>
               {category.name}
             </span>
           </button>
