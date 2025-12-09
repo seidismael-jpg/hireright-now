@@ -7,6 +7,15 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
+import ProviderDetail from "./pages/ProviderDetail";
+import Booking from "./pages/Booking";
+import Bookings from "./pages/Bookings";
+import BookingDetail from "./pages/BookingDetail";
+import Messages from "./pages/Messages";
+import Chat from "./pages/Chat";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
+import ManageServices from "./pages/ManageServices";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +44,15 @@ const AppRoutes = () => {
       <Route path="/auth" element={<Auth />} />
       <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
       <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+      <Route path="/provider/:id" element={<ProtectedRoute><ProviderDetail /></ProtectedRoute>} />
+      <Route path="/book/:providerId" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+      <Route path="/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
+      <Route path="/bookings/:id" element={<ProtectedRoute><BookingDetail /></ProtectedRoute>} />
+      <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+      <Route path="/messages/:recipientId" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+      <Route path="/profile/services" element={<ProtectedRoute><ManageServices /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
