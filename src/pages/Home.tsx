@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, MapPin } from 'lucide-react';
+import { Search, Bell } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { CategoryGrid } from '@/components/home/CategoryGrid';
@@ -22,110 +22,129 @@ export default function Home() {
     .join('')
     .toUpperCase() || '?';
 
-  const firstName = profile?.full_name?.split(' ')[0] || 'Muhammad';
+  const firstName = profile?.full_name?.split(' ')[0] || 'there';
+
+  // Time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
 
   return (
     <MobileLayout footer={<BottomNav />} noPadding>
       <div className="relative min-h-screen">
         {/* Gradient Header Background */}
-        <div className="absolute inset-x-0 top-0 h-72 bg-gradient-header -z-10" />
+        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-header -z-10" />
         
         <div className="px-5 safe-top">
           {/* Top Bar */}
           <div className="flex items-center justify-between py-4 animate-fade-up">
             <div className="flex items-center gap-3">
               <Avatar 
-                className="w-12 h-12 cursor-pointer ring-2 ring-background shadow-md" 
+                className="w-11 h-11 cursor-pointer ring-2 ring-white shadow-sm" 
                 onClick={() => navigate('/profile')}
               >
                 <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="bg-gradient-accent text-white font-semibold">
+                <AvatarFallback className="bg-gradient-accent text-white font-semibold text-sm">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-lg font-bold text-foreground">100.00 $</p>
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />
-                  Top up credit
-                </p>
+                <p className="text-[13px] text-muted-foreground">{getGreeting()}</p>
+                <p className="font-semibold text-foreground">{firstName}</p>
               </div>
             </div>
             <button 
-              className="w-12 h-12 rounded-full bg-card shadow-md flex items-center justify-center touch-scale"
+              className="w-11 h-11 rounded-full bg-white shadow-sm flex items-center justify-center touch-scale"
               onClick={() => navigate('/notifications')}
             >
               <Bell className="w-5 h-5 text-foreground" strokeWidth={1.75} />
             </button>
           </div>
 
-          {/* Greeting */}
-          <div className="mt-4 animate-fade-up stagger-1">
-            <h1 className="text-heading text-foreground">
-              Hello {firstName},
-            </h1>
-            <p className="text-2xl font-medium text-primary mt-1">
-              Where to go?
-            </p>
-          </div>
-
           {/* Search Bar */}
           <button
             onClick={() => navigate('/search')}
-            className="w-full mt-6 animate-fade-up stagger-2"
+            className="w-full mt-5 animate-fade-up stagger-1"
           >
-            <div className="relative flex items-center bg-card shadow-md rounded-2xl px-5 py-4">
-              <Search className="w-5 h-5 text-muted-foreground mr-4" strokeWidth={1.75} />
-              <span className="text-muted-foreground font-medium flex-1 text-left">Enter destination</span>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-primary" strokeWidth={2} />
-              </div>
+            <div className="flex items-center bg-white shadow-sm rounded-2xl px-4 py-3.5">
+              <Search className="w-5 h-5 text-muted-foreground mr-3" strokeWidth={1.75} />
+              <span className="text-muted-foreground text-[15px]">What service do you need?</span>
             </div>
           </button>
 
-          {/* Categories */}
-          <div className="mt-8 animate-fade-up stagger-3">
+          {/* Categories Section */}
+          <div className="mt-8 animate-fade-up stagger-2">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Categories</h2>
+              <button 
+                onClick={() => navigate('/search')}
+                className="text-[13px] font-medium text-primary"
+              >
+                See all
+              </button>
+            </div>
             <CategoryGrid categories={categories} loading={categoriesLoading} />
           </div>
 
-          {/* Location Cards */}
-          <div className="mt-8 animate-fade-up stagger-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="card-elevated p-4">
-                <p className="text-xs text-muted-foreground mb-1">From</p>
-                <p className="font-bold text-lg">PITX</p>
-                <p className="text-xs text-muted-foreground">Parañaque City</p>
-              </div>
-              <div className="card-elevated p-4">
-                <p className="text-xs text-muted-foreground mb-1">To</p>
-                <p className="font-bold text-lg">Cubao</p>
-                <p className="text-xs text-muted-foreground">Quezon City</p>
-              </div>
+          {/* Top Providers Section */}
+          <div className="mt-10 animate-fade-up stagger-3">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Top Providers</h2>
+              <button 
+                onClick={() => navigate('/search')}
+                className="text-[13px] font-medium text-primary"
+              >
+                See all
+              </button>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              <div className="card-elevated p-4">
-                <p className="text-xs text-muted-foreground mb-1">Departing on</p>
-                <p className="font-semibold">Select Date</p>
+            {providersLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-20 skeleton" />
+                ))}
               </div>
-              <div className="card-elevated p-4">
-                <p className="text-xs text-muted-foreground mb-1">Passengers</p>
-                <p className="font-semibold">1 Passenger</p>
+            ) : providers.length > 0 ? (
+              <div className="space-y-3">
+                {providers.map((provider) => (
+                  <ProviderCard key={provider.id} provider={provider} compact />
+                ))}
               </div>
-            </div>
-
-            {/* Search Button */}
-            <button className="w-full mt-6 bg-foreground text-background py-4 rounded-2xl font-semibold text-base touch-scale">
-              Search
-            </button>
+            ) : (
+              <div className="card-elevated p-8 text-center">
+                <p className="text-muted-foreground text-[15px]">No providers available yet</p>
+                <p className="text-[13px] text-muted-foreground mt-1">Check back soon!</p>
+              </div>
+            )}
           </div>
 
-          {/* Promo Card */}
-          <div className="mt-8 mb-8 animate-fade-up stagger-5">
-            <div className="bg-gradient-to-br from-purple-200/80 to-blue-200/80 rounded-3xl p-5 relative overflow-hidden">
-              <div className="absolute right-4 top-4 w-20 h-20 bg-white/30 rounded-2xl" />
-              <h3 className="text-lg font-semibold text-foreground relative z-10">Ready for</h3>
-              <p className="text-xl font-bold text-foreground relative z-10">Great Service?</p>
+          {/* Quick Actions */}
+          <div className="mt-10 mb-8 animate-fade-up stagger-4">
+            <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                onClick={() => navigate('/bookings')}
+                className="card-elevated p-4 text-left touch-scale"
+              >
+                <div className="w-10 h-10 rounded-xl bg-gradient-card flex items-center justify-center mb-3">
+                  <span className="text-lg">📅</span>
+                </div>
+                <p className="font-semibold text-[15px]">My Bookings</p>
+                <p className="text-[13px] text-muted-foreground mt-0.5">View your appointments</p>
+              </button>
+              <button 
+                onClick={() => navigate('/messages')}
+                className="card-elevated p-4 text-left touch-scale"
+              >
+                <div className="w-10 h-10 rounded-xl bg-gradient-card flex items-center justify-center mb-3">
+                  <span className="text-lg">💬</span>
+                </div>
+                <p className="font-semibold text-[15px]">Messages</p>
+                <p className="text-[13px] text-muted-foreground mt-0.5">Chat with providers</p>
+              </button>
             </div>
           </div>
         </div>

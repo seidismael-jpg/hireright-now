@@ -2,24 +2,21 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ServiceCategory } from '@/types/database';
 import { 
-  Car, Truck, Bus, Bike, LucideIcon,
-  Zap, Droplets, Sparkles, Hammer, Palette,
-  Trees, Wind, GraduationCap, Camera, Dumbbell,
-  Dog, Monitor, Scissors, ChefHat
+  Zap, Droplets, Sparkles, Hammer, Paintbrush, Truck,
+  Scissors, GraduationCap, LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const iconMap: Record<string, LucideIcon> = {
-  Car, Truck, Bus, Bike, Zap, Droplets, Sparkles, Hammer, Palette,
-  Trees, Wind, GraduationCap, Camera, Dumbbell, Dog, Monitor, Scissors, ChefHat,
+  Zap, Droplets, Sparkles, Hammer, Paintbrush, Truck, Scissors, GraduationCap
 };
 
-// Default categories matching the mockup
+// Default service categories
 const defaultCategories = [
-  { id: 'car', name: 'Car', icon: 'Car' },
-  { id: 'taxi', name: 'Taxi', icon: 'Truck' },
-  { id: 'bus', name: 'Bus', icon: 'Bus' },
-  { id: 'bike', name: 'Bike', icon: 'Bike' },
+  { id: 'electrical', name: 'Electrical', icon: 'Zap' },
+  { id: 'plumbing', name: 'Plumbing', icon: 'Droplets' },
+  { id: 'cleaning', name: 'Cleaning', icon: 'Sparkles' },
+  { id: 'repair', name: 'Repair', icon: 'Hammer' },
 ];
 
 interface CategoryGridProps {
@@ -29,15 +26,15 @@ interface CategoryGridProps {
 
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, loading }) => {
   const navigate = useNavigate();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   if (loading) {
     return (
-      <div className="flex gap-3">
-        {[...Array(4)].map((_, i) => (
+      <div className="grid grid-cols-4 gap-3">
+        {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-2xl skeleton" />
-            <div className="w-10 h-3 mt-2 rounded-full skeleton" />
+            <div className="w-14 h-14 rounded-2xl skeleton" />
+            <div className="w-10 h-2.5 mt-2 rounded-full skeleton" />
           </div>
         ))}
       </div>
@@ -49,9 +46,9 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, loading 
     : defaultCategories;
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+    <div className="grid grid-cols-4 gap-3">
       {displayCategories.map((category, index) => {
-        const Icon = iconMap[category.icon] || Car;
+        const Icon = iconMap[category.icon] || Sparkles;
         const isActive = index === activeIndex;
         
         return (
@@ -64,15 +61,15 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, loading 
             className="flex flex-col items-center touch-scale"
           >
             <div className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200",
+              "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200",
               isActive 
-                ? "bg-primary text-primary-foreground shadow-lg" 
+                ? "bg-primary text-primary-foreground shadow-md" 
                 : "bg-secondary text-foreground"
             )}>
-              <Icon className="w-6 h-6" strokeWidth={1.75} />
+              <Icon className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <span className={cn(
-              "text-xs font-medium mt-2 transition-colors",
+              "text-[11px] font-medium mt-2 transition-colors",
               isActive ? "text-foreground" : "text-muted-foreground"
             )}>
               {category.name}
